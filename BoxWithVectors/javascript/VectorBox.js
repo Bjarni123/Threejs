@@ -36,6 +36,22 @@ function CreateVectorBox() {
         group.add(lineConnectors);
     }
 
+    const points4 = [];
+
+    points4.push( new THREE.Vector4( 0, 0, 0, 1 ) );
+    points4.push( new THREE.Vector4( 0, 0, 1, 1 ) );
+    points4.push( new THREE.Vector4( 0, 1, 1, 1 ) );
+    points4.push( new THREE.Vector4( 0, 1, 0, 1 ) );
+    points4.push( new THREE.Vector4( 1, 0, 0, 1 ) );
+    points4.push( new THREE.Vector4( 1, 0, 1, 1 ) );
+    points4.push( new THREE.Vector4( 1, 1, 1, 1 ) );
+    points4.push( new THREE.Vector4( 1, 1, 0, 1 ) );
+
+
+    const geometry4 = new THREE.BufferGeometry().setFromPoints( points4 );
+    const line4 = new THREE.Line( geometry4, material );
+    group.add(line4);
+
     return group;
 }
 
