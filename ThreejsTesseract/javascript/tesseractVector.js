@@ -31,8 +31,6 @@ function connectWithVector(offset, i, j, points2) {
     return lineConnectors
 }
 
-
-
 class Tesseract {
     constructor() {
         this.group = new THREE.Group();
@@ -82,7 +80,7 @@ class Tesseract {
     }
 
     createGroup() {
-        this.group = new THREE.Group();
+        //this.group = new THREE.Group();
 
         // Add the dots/corners
         for (let i = 0; i < this.projected3d.length; i++) {
@@ -122,6 +120,8 @@ class Tesseract {
 
     tick() {
         this.angle += 0.02;
+        this.calculatePoints();
+        this.createGroup();
     }
 
     getTesseract() {
