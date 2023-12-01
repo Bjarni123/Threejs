@@ -31,100 +31,14 @@ function connectWithVector(offset, i, j, points2) {
     return lineConnectors
 }
 
-function CreateTesseractVector(angle2 = 0, width = 2) {
-    const group = new THREE.Group();
-    let projected3d = [];
-    const angle = angle2;
-    var dotGeometry = new THREE.SphereGeometry(0.1, 32, 16);
-    var dotMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 
-    for (let i = 0; i < points.length; i++) {
-        const v = points[i];
-        
-        const rotationXY = [
-            [Math.cos(angle), -Math.sin(angle), 0, 0],
-            [Math.sin(angle), Math.cos(angle), 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-        ];
-
-        
-        const rotationZW = [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, Math.cos(angle), -Math.sin(angle)],
-            [0, 0, Math.sin(angle), Math.cos(angle)]
-        ];
-
-        
-        let rotated = matrix.matmul(rotationXY, v);
-        rotated = matrix.matmul(rotationZW, rotated);
-
-    
-        let distance = 2;
-        let w = 1 / (distance - rotated.w);
-
-    
-        const projection = [
-            [w, 0, 0, 0],
-            [0, w, 0, 0],
-            [0, 0, w, 0],
-        ];
-    
-        let projected = matrix.matmul(projection, rotated);
-        projected.mult(width);
-        projected3d[i] = projected;
-
-        
-        var dot = new THREE.Mesh( dotGeometry, dotMaterial );
-        dot.position.set(projected.x, projected.y, projected.z);
-        group.add( dot );
-    }
-
-    // Add the dots/corners
-    /* for (let i = 0; i < projected3d.length; i++) {
-        var dotGeometry = new THREE.SphereGeometry(0.1, 32, 16);
-        var dotMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        var dot = new THREE.Mesh( dotGeometry, dotMaterial );
-        dot.position.set(projected3d[i].x, projected3d[i].y, projected3d[i].z);
-        group.add( dot );
-    } */
-
-
-    // put the lines on "outer" box
-    for (let i = 0; i < 4; i++) {
-        const line1 = connectWithVector(0, i, (i + 1) % 4, projected3d);
-        const line2 = connectWithVector(0, i + 4, ((i + 1) % 4) + 4, projected3d);
-        const line3 = connectWithVector(0, i, i + 4, projected3d);
-
-        group.add(line1, line2, line3);
-    }
-
-    // put the lines on the "inner" box
-    for (let i = 0; i < 4; i++) {
-        const line1 = connectWithVector(8, i, (i + 1) % 4, projected3d);
-        const line2 = connectWithVector(8, i + 4, ((i + 1) % 4) + 4, projected3d);
-        const line3 = connectWithVector(8, i, i + 4, projected3d);
-
-        group.add(line1, line2, line3);
-    }
-
-    // connect the boxes
-    for (let i = 0; i < 8; i++) {
-        const line1 = connectWithVector(0, i, i + 8, projected3d);
-
-        group.add(line1);
-    }
-
-
-    return group;
-}
 
 class Tesseract {
     constructor() {
         this.group = new THREE.Group();
         this.angle = 0;
         this.projected3d = [];
+        this.width = 2;
     }
 
     calculatePoints() {
@@ -132,8 +46,8 @@ class Tesseract {
             const v = points[i];
             
             const rotationXY = [
-                [Math.cos(angle), -Math.sin(angle), 0, 0],
-                [Math.sin(angle), Math.cos(angle), 0, 0],
+                [Math.cos(this.angle), -Math.sin(this.angle), 0, 0],
+                [Math.sin(this.angle), Math.cos(this.angle), 0, 0],
                 [0, 0, 1, 0],
                 [0, 0, 0, 1],
             ];
@@ -142,8 +56,8 @@ class Tesseract {
             const rotationZW = [
                 [1, 0, 0, 0],
                 [0, 1, 0, 0],
-                [0, 0, Math.cos(angle), -Math.sin(angle)],
-                [0, 0, Math.sin(angle), Math.cos(angle)]
+                [0, 0, Math.cos(this.angle), -Math.sin(this.angle)],
+                [0, 0, Math.sin(this.angle), Math.cos(this.angle)]
             ];
     
             
@@ -162,8 +76,47 @@ class Tesseract {
             ];
         
             let projected = matrix.matmul(projection, rotated);
-            projected.mult(width);
-            projected3d[i] = projected;
+            projected.mult(this.width);
+            this.projected3d[i] = projected;
+        }
+    }
+
+    createGroup() {
+        this.group = new THREE.Group();
+
+        // Add the dots/corners
+        for (let i = 0; i < this.projected3d.length; i++) {
+            var dotGeometry = new THREE.SphereGeometry(0.1, 32, 16);
+            var dotMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+            var dot = new THREE.Mesh( dotGeometry, dotMaterial );
+            dot.position.set(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z);
+            this.group.add( dot );
+        }
+
+
+        // put the lines on "outer" box
+        for (let i = 0; i < 4; i++) {
+            const line1 = connectWithVector(0, i, (i + 1) % 4, this.projected3d);
+            const line2 = connectWithVector(0, i + 4, ((i + 1) % 4) + 4, this.projected3d);
+            const line3 = connectWithVector(0, i, i + 4, this.projected3d);
+
+            this.group.add(line1, line2, line3);
+        }
+
+        // put the lines on the "inner" box
+        for (let i = 0; i < 4; i++) {
+            const line1 = connectWithVector(8, i, (i + 1) % 4, this.projected3d);
+            const line2 = connectWithVector(8, i + 4, ((i + 1) % 4) + 4, this.projected3d);
+            const line3 = connectWithVector(8, i, i + 4, this.projected3d);
+
+            this.group.add(line1, line2, line3);
+        }
+
+        // connect the boxes
+        for (let i = 0; i < 8; i++) {
+            const line1 = connectWithVector(0, i, i + 8, this.projected3d);
+
+            this.group.add(line1);
         }
     }
 
@@ -172,6 +125,8 @@ class Tesseract {
     }
 
     getTesseract() {
+        this.calculatePoints();
+        this.createGroup();
         return this.group;
     }
 }
