@@ -69,7 +69,7 @@ function vecToMatrix(v) {
     }
     
     function matmul(a, b) {
-        if (b instanceof Vector3) {
+        if (b instanceof p5.Vector) {
             return matmulvec(a, b);
         }
         if (b instanceof P4Vector) {

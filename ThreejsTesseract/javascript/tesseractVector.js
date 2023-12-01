@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import * as matrix from "./matrix";
 
-const points = [
+let points = [
     new P4Vector(-1, -1, -1, 1),
     new P4Vector(1, -1, -1, 1),
     new P4Vector(1, 1, -1, 1),
@@ -31,32 +31,39 @@ function connectWithVector(offset, i, j, points2) {
     return lineConnectors
 }
 
-function CreateTesseractVector(angle = 0, width = 2) {
+function CreateTesseractVector(angle2 = 0, width = 2) {
     const group = new THREE.Group();
-    const projected3d = [];
+    let projected3d = [];
+    const angle = angle2;
+    var dotGeometry = new THREE.SphereGeometry(0.1, 32, 16);
+    var dotMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 
     for (let i = 0; i < points.length; i++) {
         const v = points[i];
-    
+        
         const rotationXY = [
             [Math.cos(angle), -Math.sin(angle), 0, 0],
             [Math.sin(angle), Math.cos(angle), 0, 0],
             [0, 0, 1, 0],
             [0, 0, 0, 1],
         ];
-    
+
+        
         const rotationZW = [
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, Math.cos(angle), -Math.sin(angle)],
             [0, 0, Math.sin(angle), Math.cos(angle)]
         ];
-    
+
+        
         let rotated = matrix.matmul(rotationXY, v);
         rotated = matrix.matmul(rotationZW, rotated);
+
     
         let distance = 2;
         let w = 1 / (distance - rotated.w);
+
     
         const projection = [
             [w, 0, 0, 0],
@@ -67,17 +74,21 @@ function CreateTesseractVector(angle = 0, width = 2) {
         let projected = matrix.matmul(projection, rotated);
         projected.mult(width);
         projected3d[i] = projected;
+
+        
+        var dot = new THREE.Mesh( dotGeometry, dotMaterial );
+        dot.position.set(projected.x, projected.y, projected.z);
+        group.add( dot );
     }
 
-
     // Add the dots/corners
-    for (let i = 0; i < projected3d.length; i++) {
+    /* for (let i = 0; i < projected3d.length; i++) {
         var dotGeometry = new THREE.SphereGeometry(0.1, 32, 16);
         var dotMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         var dot = new THREE.Mesh( dotGeometry, dotMaterial );
         dot.position.set(projected3d[i].x, projected3d[i].y, projected3d[i].z);
         group.add( dot );
-    }
+    } */
 
 
     // put the lines on "outer" box
@@ -105,18 +116,59 @@ function CreateTesseractVector(angle = 0, width = 2) {
         group.add(line1);
     }
 
+
     return group;
 }
 
 class Tesseract {
     constructor() {
-        this.group = CreateTesseractVector();
+        this.group = new THREE.Group();
         this.angle = 0;
+        this.projected3d = [];
+    }
+
+    calculatePoints() {
+        for (let i = 0; i < points.length; i++) {
+            const v = points[i];
+            
+            const rotationXY = [
+                [Math.cos(angle), -Math.sin(angle), 0, 0],
+                [Math.sin(angle), Math.cos(angle), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ];
+    
+            
+            const rotationZW = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, Math.cos(angle), -Math.sin(angle)],
+                [0, 0, Math.sin(angle), Math.cos(angle)]
+            ];
+    
+            
+            let rotated = matrix.matmul(rotationXY, v);
+            rotated = matrix.matmul(rotationZW, rotated);
+    
+        
+            let distance = 2;
+            let w = 1 / (distance - rotated.w);
+    
+        
+            const projection = [
+                [w, 0, 0, 0],
+                [0, w, 0, 0],
+                [0, 0, w, 0],
+            ];
+        
+            let projected = matrix.matmul(projection, rotated);
+            projected.mult(width);
+            projected3d[i] = projected;
+        }
     }
 
     tick() {
-        this.angle += 0.01;
-        this.group = CreateTesseractVector(this.angle);
+        this.angle += 0.02;
     }
 
     getTesseract() {

@@ -62,6 +62,7 @@ function draw() {
     let distance = 2;
     let w = 1 / (distance - rotated.w);
 
+
     const projection = [
       [w, 0, 0, 0],
       [0, w, 0, 0],
@@ -96,8 +97,10 @@ function draw() {
     connect(0, i, i + 8, projected3d);
   }
 
-  //angle = map(mouseX, 0, width, 0, TWO_PI);
+  // angle = map(mouseX, 0, width, 0, TWO_PI);
   angle += 0.02;
+  // console.log(angle);
+  // console.log(projected3d);
 }
 
 function connect(offset, i, j, points) {
