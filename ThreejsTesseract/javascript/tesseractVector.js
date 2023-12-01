@@ -21,11 +21,6 @@ const points = [
     new P4Vector(-1, 1, 1, -1)
 ]
 
-
-let angle = 0;
-let projected3d = [];
-const width = 2;
-
 function connectWithVector(offset, i, j, points2) {
     const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
     const p1 = points2[i + offset];
@@ -36,8 +31,9 @@ function connectWithVector(offset, i, j, points2) {
     return lineConnectors
 }
 
-function CreateTesseractVector() {
+function CreateTesseractVector(angle = 0, width = 2) {
     const group = new THREE.Group();
+    const projected3d = [];
 
     for (let i = 0; i < points.length; i++) {
         const v = points[i];
@@ -109,9 +105,23 @@ function CreateTesseractVector() {
         group.add(line1);
     }
 
-    angle += 0.02;
-
     return group;
 }
 
-export { CreateTesseractVector }
+class Tesseract {
+    constructor() {
+        this.group = CreateTesseractVector();
+        this.angle = 0;
+    }
+
+    tick() {
+        this.angle += 0.01;
+        this.group = CreateTesseractVector(this.angle);
+    }
+
+    getTesseract() {
+        return this.group;
+    }
+}
+
+export { Tesseract }
