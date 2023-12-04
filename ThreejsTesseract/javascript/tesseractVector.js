@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import * as matrix from "./matrix";
 
-/* let points = [
+let points = [
     new P4Vector(-1, -1, -1, 1),
     new P4Vector(1, -1, -1, 1),
     new P4Vector(1, 1, -1, 1),
@@ -19,25 +19,6 @@ import * as matrix from "./matrix";
     new P4Vector(1, -1, 1, -1),
     new P4Vector(1, 1, 1, -1),
     new P4Vector(-1, 1, 1, -1)
-] */
-
-let points = [
-    new P4Vector(-3, -3, -3, 3),
-    new P4Vector(3, -3, -3, 3),
-    new P4Vector(3, 3, -3, 3),
-    new P4Vector(-3, 3, -3, 3),
-    new P4Vector(-3, -3, 3, 3),
-    new P4Vector(3, -3, 3, 3),
-    new P4Vector(3, 3, 3, 3),
-    new P4Vector(-3, 3, 3, 3),
-    new P4Vector(-3, -3, -3, -3),
-    new P4Vector(3, -3, -3, -3),
-    new P4Vector(3, 3, -3, -3),
-    new P4Vector(-3, 3, -3, -3),
-    new P4Vector(-3, -3, 3, -3),
-    new P4Vector(3, -3, 3, -3),
-    new P4Vector(3, 3, 3, -3),
-    new P4Vector(-3, 3, 3, -3)
 ]
 
 function connectWithVector(offset, i, j, points2) {
@@ -58,7 +39,7 @@ class Tesseract {
         this.width = 2;
     }
 
-    calculatePoints([x, y, z, w] = [0, 0, 0, 0]) {
+    calculatePoints( xRotation = false, yRotation = false, zRotation = false, wRotation = false ) {
         for (let i = 0; i < points.length; i++) {
             const v = points[i];
             
@@ -94,11 +75,20 @@ class Tesseract {
                 [0, 0, Math.sin(this.angle), Math.cos(this.angle)]
             ];
     
-            
-            // rotated = matrix.matmul(rotateX, v);
-            // rotated = matrix.matmul(rotateY, rotated);
-            // rotated = matrix.matmul(rotateZ, rotated);
-            let rotated = matrix.matmul(rotateW, v);
+            let rotated = v;
+
+            if (xRotation) {
+                rotated = matrix.matmul(rotateX, rotated);
+            }
+            if (yRotation) {
+                rotated = matrix.matmul(rotateY, rotated);
+            }
+            if (zRotation) {
+                rotated = matrix.matmul(rotateZ, rotated);
+            }
+            if (wRotation) {
+                rotated = matrix.matmul(rotateW, rotated);
+            }
     
         
             let distance = 2;
@@ -191,7 +181,7 @@ class Tesseract {
 
     tick() {
         this.angle += 0.01;
-        this.calculatePoints();
+        this.calculatePoints(false, false, false, false);
         this.update();
     }
 

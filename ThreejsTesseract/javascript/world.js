@@ -5,6 +5,7 @@ import { onResize, Resizer, createControls } from "/javascript/ResizerAndControl
 import { createFloor, createLights } from "/javascript/floorAndLights.js";
 import { CreateVectorBox } from "/javascript/VectorBox.js";
 import { Tesseract } from '/javascript/tesseractVector.js';
+import { CreateVectorSphere } from '/javascript/VectorSphere.js';
 
 // import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js?module';
 
@@ -59,16 +60,18 @@ class World {
         
         // const VectorBox = CreateVectorBox();
         
-        const VectorTesseract = new Tesseract();
+        // const VectorTesseract = new Tesseract();
+
+        const VectorSphere = new CreateVectorSphere();
         
         // const floor = createFloor();
         const { ambientLight, mainLight } = createLights();
 
         //controls.target.copy(meshGroup.position);
 
-        loop.updatables.push(controls, VectorTesseract/* , VectorBox */);
+        loop.updatables.push(controls/* , VectorTesseract *//* , VectorBox */);
 
-        scene.add(ambientLight, mainLight, VectorTesseract.getTesseract()/* ,  floor *//*,  VectorBox */);
+        scene.add(ambientLight, mainLight, VectorSphere.getSphere()/* , VectorTesseract.getTesseract() *//* ,  floor *//*,  VectorBox */);
         
         const resizer = new Resizer(container, camera, renderer);
 
