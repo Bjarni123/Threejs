@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import * as matrix from "./matrix";
 
-let points = [
+/* let points = [
     new P4Vector(-1, -1, -1, 1),
     new P4Vector(1, -1, -1, 1),
     new P4Vector(1, 1, -1, 1),
@@ -19,6 +19,25 @@ let points = [
     new P4Vector(1, -1, 1, -1),
     new P4Vector(1, 1, 1, -1),
     new P4Vector(-1, 1, 1, -1)
+] */
+
+let points = [
+    new P4Vector(-3, -3, -3, 3),
+    new P4Vector(3, -3, -3, 3),
+    new P4Vector(3, 3, -3, 3),
+    new P4Vector(-3, 3, -3, 3),
+    new P4Vector(-3, -3, 3, 3),
+    new P4Vector(3, -3, 3, 3),
+    new P4Vector(3, 3, 3, 3),
+    new P4Vector(-3, 3, 3, 3),
+    new P4Vector(-3, -3, -3, -3),
+    new P4Vector(3, -3, -3, -3),
+    new P4Vector(3, 3, -3, -3),
+    new P4Vector(-3, 3, -3, -3),
+    new P4Vector(-3, -3, 3, -3),
+    new P4Vector(3, -3, 3, -3),
+    new P4Vector(3, 3, 3, -3),
+    new P4Vector(-3, 3, 3, -3)
 ]
 
 function connectWithVector(offset, i, j, points2) {
