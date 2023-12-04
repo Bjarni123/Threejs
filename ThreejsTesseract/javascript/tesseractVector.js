@@ -39,19 +39,36 @@ class Tesseract {
         this.width = 2;
     }
 
-    calculatePoints() {
+    calculatePoints([x, y, z, w] = [0, 0, 0, 0]) {
         for (let i = 0; i < points.length; i++) {
             const v = points[i];
             
-            const rotationXY = [
+            // X rotation
+            const rotateX = [    
+                [1, 0, 0, 0],
+                [0, Math.cos(this.angle), -Math.sin(this.angle), 0],
+                [0, Math.sin(this.angle), Math.cos(this.angle), 0],
+                [0, 0, 0, 1]
+            ];
+
+            // Z rotation
+            const rotateZ = [
                 [Math.cos(this.angle), -Math.sin(this.angle), 0, 0],
                 [Math.sin(this.angle), Math.cos(this.angle), 0, 0],
                 [0, 0, 1, 0],
                 [0, 0, 0, 1],
             ];
+
+            // Y rotation
+            const rotateY = [
+                [Math.cos(this.angle), 0, -Math.sin(this.angle), 0],
+                [0, 1, 0, 0],
+                [Math.sin(this.angle), 0, Math.cos(this.angle), 0],
+                [0, 0, 0, 1],
+            ];
     
-            
-            const rotationZW = [
+            // W rotation
+            const rotateW = [
                 [1, 0, 0, 0],
                 [0, 1, 0, 0],
                 [0, 0, Math.cos(this.angle), -Math.sin(this.angle)],
@@ -59,8 +76,10 @@ class Tesseract {
             ];
     
             
-            let rotated = matrix.matmul(rotationXY, v);
-            rotated = matrix.matmul(rotationZW, rotated);
+            // rotated = matrix.matmul(rotateX, v);
+            // rotated = matrix.matmul(rotateY, rotated);
+            // rotated = matrix.matmul(rotateZ, rotated);
+            let rotated = matrix.matmul(rotateW, v);
     
         
             let distance = 2;
@@ -80,7 +99,7 @@ class Tesseract {
     }
 
     createGroup() {
-        //this.group = new THREE.Group();
+        this.group = new THREE.Group();
 
         // Add the dots/corners
         for (let i = 0; i < this.projected3d.length; i++) {
@@ -118,10 +137,43 @@ class Tesseract {
         }
     }
 
+    update () {
+        for (let i = 0; i < 16; i++) {
+            var dot = this.group.children[i];
+            dot.position.set(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z);
+        }
+
+        // outer box lines
+        for (let i = 0; i < 4; i++) {
+            const line = this.group.children[i + 16];
+            line.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z), new THREE.Vector3(this.projected3d[(i + 1) % 4].x, this.projected3d[(i + 1) % 4].y, this.projected3d[(i + 1) % 4].z)] );
+            const line2 = this.group.children[i + 20];
+            line2.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i + 4].x, this.projected3d[i + 4].y, this.projected3d[i + 4].z), new THREE.Vector3(this.projected3d[((i + 1) % 4) + 4].x, this.projected3d[((i + 1) % 4) + 4].y, this.projected3d[((i + 1) % 4) + 4].z)] );
+            const line3 = this.group.children[i + 24];
+            line3.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z), new THREE.Vector3(this.projected3d[i + 4].x, this.projected3d[i + 4].y, this.projected3d[i + 4].z)] );
+        }
+
+        // inner box lines
+        for (let i = 0; i < 4; i++) {
+            const line1 = this.group.children[i + 28];
+            line1.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i + 8].x, this.projected3d[i + 8].y, this.projected3d[i + 8].z), new THREE.Vector3(this.projected3d[(i + 1) % 4 + 8].x, this.projected3d[(i + 1) % 4 + 8].y, this.projected3d[(i + 1) % 4 + 8].z)] );
+            const line2 = this.group.children[i + 32];
+            line2.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i + 12].x, this.projected3d[i + 12].y, this.projected3d[i + 12].z), new THREE.Vector3(this.projected3d[((i + 1) % 4) + 12].x, this.projected3d[((i + 1) % 4) + 12].y, this.projected3d[((i + 1) % 4) + 12].z)] );
+            const line3 = this.group.children[i + 36];
+            line3.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i + 8].x, this.projected3d[i + 8].y, this.projected3d[i + 8].z), new THREE.Vector3(this.projected3d[i + 12].x, this.projected3d[i + 12].y, this.projected3d[i + 12].z)] );
+        }
+
+        // connect the boxes
+        for (let i = 0; i < 8; i++) {
+            const line1 = this.group.children[i + 40];
+            line1.geometry.setFromPoints( [new THREE.Vector3(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z), new THREE.Vector3(this.projected3d[i + 8].x, this.projected3d[i + 8].y, this.projected3d[i + 8].z)] );
+        }
+    }
+
     tick() {
-        this.angle += 0.02;
+        this.angle += 0.01;
         this.calculatePoints();
-        this.createGroup();
+        this.update();
     }
 
     getTesseract() {

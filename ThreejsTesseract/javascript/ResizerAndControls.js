@@ -37,7 +37,7 @@ function createControls(camera, canvas) {
 
     controls.listenToKeyEvents(window);
 
-    controls.autoRotate = true;
+    controls.autoRotate = false;
     controls.autoRotateSpeed = 1;
 
     controls.minDistance = 0; // 8
