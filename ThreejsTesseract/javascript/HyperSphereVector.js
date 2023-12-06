@@ -75,15 +75,50 @@ class CreateHyperSphere {
         this.drawCircle();
     }
 
-    calculatePoints() {
+    calculatePoints(rotateX, rotateY, rotateZ, rotateW) {
         // https://stackoverflow.com/questions/57123194/how-to-distribute-points-evenly-on-the-surface-of-hyperspheres-in-higher-dimensi
         
-        const dimensions = 4; // Change the number of dimensions as needed
+        /* const dimensions = 4; // Change the number of dimensions as needed
         const numPoints = 200; // Change the number of points as needed
 
-        this.points = generatePointsOnHypersphere(dimensions, numPoints, this.radius);
+        this.points = generatePointsOnHypersphere(dimensions, numPoints, this.radius); */
 
-        this.calculate3DProjection();
+        let da = 35;
+        const na= 90.0/da;
+        console.log(na * na * na * 8);
+        if (na<1) return;
+        da = (90 / (na-1));
+
+        let i, j, k;
+        let a, b, c, x, y, z, w, l;
+
+        for (a = -45.0 * Math.PI / 180, i = 0; i < na; i++, a += da) {
+            for (b = -45.0 * Math.PI / 180, j = 0; j < na; j++, b += da) {
+                for (c = -45.0 * Math.PI / 180, k = 0; k < na; k++, c += da) {
+                    x = Math.tan(a);
+                    y = Math.tan(b);
+                    z = Math.tan(c);
+                    w = 1.0;
+
+                    l = Math.sqrt(x * x + y * y + z * z + w * w);
+                    x /= l;
+                    y /= l;
+                    z /= l;
+                    w /= l;
+
+                    this.points.push(new P4Vector(x, y, z, -w));
+                    this.points.push(new P4Vector(x, y, z, w));
+                    this.points.push(new P4Vector(x, y, -w, z));
+                    this.points.push(new P4Vector(x, y, w, z));
+                    this.points.push(new P4Vector(x, -w, y, z));
+                    this.points.push(new P4Vector(x, w, y, z));
+                    this.points.push(new P4Vector(-w, x, y, z));
+                    this.points.push(new P4Vector(w, x, y, z));
+                }
+            }
+        }
+
+        this.calculate3DProjection(rotateX, rotateY, rotateZ, rotateW);
     }
 
     calculate3DProjection( xRotation = false, yRotation = false, zRotation = false, wRotation = false ) {
@@ -156,6 +191,13 @@ class CreateHyperSphere {
         // this.projected3d = this.points;
     }
 
+    update () {
+        for (let i = 0; i < this.projected3d.length; i++) {
+            var dot = this.group.children[i];
+            dot.position.set(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z);
+        }
+    }
+
     drawCircle() {
         this.group = new THREE.Group();
 
@@ -168,7 +210,7 @@ class CreateHyperSphere {
         }
 
         // Draw lines between the points
-        const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+        /* const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
         for (let i = 0; i < this.projected3d.length; i++) {
             for (let j = i + 1; j < this.projected3d.length; j++) {
                 const point1 = new THREE.Vector3( this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z );
@@ -183,19 +225,19 @@ class CreateHyperSphere {
                 let distW = (this.projected3d[i].w - this.projected3d[j].w);
                 distW *= distW;
                 const distance = Math.sqrt(distX + distY + distZ + distW);
-                if (distance < 0.8) {
+                if (distance < 0.2) {
                     const geometry = new THREE.BufferGeometry().setFromPoints( [point1, point2] );
                     const line = new THREE.Line( geometry, material );
                     this.group.add( line );
                 }
             }
-        }
+        } */
     }
 
     tick() {
-        this.angle += 0.01;
-        this.calculate3DProjection(false, true, false, false);
-        this.drawCircle();
+        this.angle += 0.02;
+        this.calculate3DProjection(true, true, true, true);
+        this.update();
     }
 
     getSphere() {
