@@ -181,7 +181,7 @@ class Tesseract {
 
     tick() {
         this.angle += 0.01;
-        this.calculatePoints(false, false, false, false);
+        this.calculatePoints(false, false, false, true);
         this.update();
     }
 

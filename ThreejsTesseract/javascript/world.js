@@ -72,7 +72,7 @@ class World {
 
         //controls.target.copy(meshGroup.position);
 
-        loop.updatables.push(controls/* , VectorTesseract *//* , VectorBox */);
+        loop.updatables.push(controls, VectorHyperSphere/* , VectorTesseract *//* , VectorBox */);
 
         scene.add(ambientLight, mainLight, VectorHyperSphere.getSphere()/* , VectorSphere.getSphere() *//* , VectorTesseract.getTesseract() *//* ,  floor *//*,  VectorBox */);
         
