@@ -85,7 +85,7 @@ class CreateHyperSphere {
 
         let da = 35;
         const na= 90.0/da;
-        console.log(na * na * na * 8);
+        // console.log(na * na * na * 8);
         if (na<1) return;
         da = (90 / (na-1));
 
@@ -236,7 +236,7 @@ class CreateHyperSphere {
 
     tick() {
         this.angle += 0.02;
-        this.calculate3DProjection(true, true, true, true);
+        this.calculate3DProjection(false, false, false, true);
         this.update();
     }
 

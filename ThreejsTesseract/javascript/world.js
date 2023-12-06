@@ -61,20 +61,22 @@ class World {
         
         // const VectorBox = CreateVectorBox();
         
-        // const VectorTesseract = new Tesseract();
+        const VectorTesseract = new Tesseract();
+        VectorTesseract.position = (new THREE.Vector3(-2, 0, 0));
 
         // const VectorSphere = new CreateVectorSphere();
 
         const VectorHyperSphere = new CreateHyperSphere();
+        VectorHyperSphere.position = (new THREE.Vector3(2, 0, 0));
         
         // const floor = createFloor();
         const { ambientLight, mainLight } = createLights();
 
         //controls.target.copy(meshGroup.position);
 
-        loop.updatables.push(controls, VectorHyperSphere/* , VectorTesseract *//* , VectorBox */);
+        loop.updatables.push(controls, VectorHyperSphere, VectorTesseract/* , VectorBox */);
 
-        scene.add(ambientLight, mainLight, VectorHyperSphere.getSphere()/* , VectorSphere.getSphere() *//* , VectorTesseract.getTesseract() *//* ,  floor *//*,  VectorBox */);
+        scene.add(ambientLight, mainLight, VectorHyperSphere.getSphere()/* , VectorSphere.getSphere() */, VectorTesseract.getTesseract()/* ,  floor *//*,  VectorBox */);
         
         const resizer = new Resizer(container, camera, renderer);
 
