@@ -77,7 +77,7 @@ class World {
         loop.updatables.push(controls, VectorHyperSphere, VectorTesseract/* , VectorBox */);
 
         scene.add(ambientLight, mainLight, VectorHyperSphere.getSphere()/* , VectorSphere.getSphere() */, VectorTesseract.getTesseract()/* ,  floor *//*,  VectorBox */);
-        
+
         const resizer = new Resizer(container, camera, renderer);
 
         controls.addEventListener('change', () => {

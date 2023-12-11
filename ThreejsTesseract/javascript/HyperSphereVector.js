@@ -66,9 +66,10 @@ function sphericalCode(points) {
 class CreateHyperSphere {
     constructor() {
         this.group = new THREE.Group();
+        this.position = new THREE.Vector3(0, 0, 0);
         this.width = 2;
         this.angle = 0;
-        this.radius = 2;
+        this.radius = 1;
         this.points = [];
         this.projected3d = [];
         this.calculatePoints();
@@ -185,7 +186,7 @@ class CreateHyperSphere {
         
             let projected = matrix.matmul(projection, rotated);
             projected.mult(this.width);
-            this.projected3d[i] = projected;
+            this.projected3d[i] = new THREE.Vector3(projected.x + this.position.x, projected.y + this.position.y, projected.z + this.position.z);
         }
 
         // this.projected3d = this.points;
@@ -194,7 +195,7 @@ class CreateHyperSphere {
     update () {
         for (let i = 0; i < this.projected3d.length; i++) {
             var dot = this.group.children[i];
-            dot.position.set(this.projected3d[i].x, this.projected3d[i].y, this.projected3d[i].z);
+            dot.position.set(this.projected3d[i].x * this.radius, this.projected3d[i].y * this.radius, this.projected3d[i].z * this.radius);
         }
     }
 
@@ -236,7 +237,7 @@ class CreateHyperSphere {
 
     tick() {
         this.angle += 0.02;
-        this.calculate3DProjection(false, false, false, true);
+        this.calculate3DProjection(false, false, false, false);
         this.update();
     }
 

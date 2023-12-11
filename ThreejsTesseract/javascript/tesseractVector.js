@@ -36,7 +36,8 @@ class Tesseract {
         this.group = new THREE.Group();
         this.angle = 0;
         this.projected3d = [];
-        this.width = 2;
+        this.width = 1;
+        this.position = new THREE.Vector3(0, 0, 0);
     }
 
     calculatePoints( xRotation = false, yRotation = false, zRotation = false, wRotation = false ) {
@@ -103,7 +104,7 @@ class Tesseract {
         
             let projected = matrix.matmul(projection, rotated);
             projected.mult(this.width);
-            this.projected3d[i] = projected;
+            this.projected3d[i] = new THREE.Vector3(projected.x + this.position.x, projected.y + this.position.y, projected.z + this.position.z);
         }
     }
 
@@ -181,7 +182,7 @@ class Tesseract {
 
     tick() {
         this.angle += 0.01;
-        this.calculatePoints(false, false, false, true);
+        this.calculatePoints(false, false, false, false);
         this.update();
     }
 
