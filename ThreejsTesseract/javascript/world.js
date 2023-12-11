@@ -64,6 +64,45 @@ class World {
         const VectorTesseract = new Tesseract();
         VectorTesseract.position = (new THREE.Vector3(-2, 0, 0));
 
+
+        document.addEventListener('keydown', function(event) {
+            if(event.keyCode == 65) {
+                VectorTesseract.setYRotation(1);
+                console.log('A was pressed');
+            }
+            else if(event.keyCode == '68') {
+                VectorTesseract.setYRotation(-1);
+                console.log('D was pressed');
+            }
+            else if(event.keyCode == 87) {
+                VectorTesseract.setXRotation(-1);
+                console.log('W was pressed');
+            }
+            else if(event.keyCode == '83') {
+                VectorTesseract.setXRotation(1);
+                console.log('S was pressed');
+            }
+            else if (event.keyCode == 81) {
+                VectorTesseract.setZRotation(1);
+                console.log('Q was pressed');
+            }
+            else if (event.keyCode == 69) {
+                VectorTesseract.setZRotation(-1);
+                console.log('E was pressed');
+            }
+            else if (event.keyCode == 32) {
+                VectorTesseract.setWRotation(1);
+                console.log('Space was pressed');
+            }
+            else if (event.keyCode == 16) {
+                VectorTesseract.setWRotation(-1);
+                console.log('Shift was pressed');
+            }
+            else {
+                console.log(event.keyCode);
+            }
+        });
+
         // const VectorSphere = new CreateVectorSphere();
 
         const VectorHyperSphere = new CreateHyperSphere();

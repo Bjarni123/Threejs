@@ -35,13 +35,14 @@ function createControls(camera, canvas) {
 
     controls.tick = () => controls.update();
 
-    controls.listenToKeyEvents(window);
+    // controls.listenToKeyEvents(window);
+    controls.enabled = true;
 
     controls.autoRotate = false;
     controls.autoRotateSpeed = 1;
 
-    controls.minDistance = 0; // 8
-    controls.maxDistance = 1000; // 20
+    controls.minDistance = 8; // 8
+    controls.maxDistance = 20; // 20
 
     return controls;
 }

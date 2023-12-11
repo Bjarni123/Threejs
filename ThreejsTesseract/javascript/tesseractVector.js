@@ -38,58 +38,135 @@ class Tesseract {
         this.projected3d = [];
         this.width = 1;
         this.position = new THREE.Vector3(0, 0, 0);
+        this.rotations = [0, 0, 0, 0];
     }
 
-    calculatePoints( xRotation = false, yRotation = false, zRotation = false, wRotation = false ) {
+    setXRotation(xRot) {
+        this.rotations[0] += 0.01 * xRot;
+    }
+
+    setYRotation(yRot) {
+        this.rotations[1] += 0.01 * yRot;
+    }
+    
+    setZRotation(zRot) {
+        this.rotations[2] += 0.01 * zRot;
+    }
+
+    setWRotation(wRot) {
+        this.rotations[3] += 0.01 * wRot;
+    }
+
+
+
+    calculatePoints() {
         for (let i = 0; i < points.length; i++) {
             const v = points[i];
-            
+    
+            let rotated = v;
+            let tempAngle = this.angle;
+
+            /* if (this.rotations[0]) {
+                if (this.rotations[0] > 0) {
+                    tempAngle = this.angle;
+                }
+                else {
+                    tempAngle = -this.angle;
+                }
+                // X rotation
+                const rotateX = [    
+                    [1, 0, 0, 0],
+                    [0, Math.cos(tempAngle), -Math.sin(tempAngle), 0],
+                    [0, Math.sin(tempAngle), Math.cos(tempAngle), 0],
+                    [0, 0, 0, 1]
+                ];
+                rotated = matrix.matmul(rotateX, rotated);
+            }
+            if (this.rotations[1]) {
+                if (this.rotations[1] > 0) {
+                    tempAngle = this.angle;
+                }
+                else {
+                    tempAngle = -this.angle;
+                }
+                // Y rotation
+                const rotateY = [
+                    [Math.cos(tempAngle), 0, -Math.sin(tempAngle), 0],
+                    [0, 1, 0, 0],
+                    [Math.sin(tempAngle), 0, Math.cos(tempAngle), 0],
+                    [0, 0, 0, 1],
+                ];
+                rotated = matrix.matmul(rotateY, rotated);
+            }
+            if (this.rotations[2]) {
+                if (this.rotations[2] > 0) {
+                    tempAngle = this.angle;
+                }
+                else {
+                    tempAngle = -this.angle;
+                }
+                // Z rotation
+                const rotateZ = [
+                    [Math.cos(tempAngle), -Math.sin(tempAngle), 0, 0],
+                    [Math.sin(tempAngle), Math.cos(tempAngle), 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1],
+                ];
+                rotated = matrix.matmul(rotateZ, rotated);
+            }
+            if (this.rotations[3]) {
+                if (this.rotations[3] > 0) {
+                    tempAngle = this.angle;
+                }
+                else {
+                    tempAngle = -this.angle;
+                }
+                 // W rotation
+                const rotateW = [
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, Math.cos(tempAngle), -Math.sin(tempAngle)],
+                    [0, 0, Math.sin(tempAngle), Math.cos(tempAngle)]
+                ];
+
+                rotated = matrix.matmul(rotateW, rotated);
+            } */
+
             // X rotation
             const rotateX = [    
                 [1, 0, 0, 0],
-                [0, Math.cos(this.angle), -Math.sin(this.angle), 0],
-                [0, Math.sin(this.angle), Math.cos(this.angle), 0],
+                [0, Math.cos(this.rotations[0]), -Math.sin(this.rotations[0]), 0],
+                [0, Math.sin(this.rotations[0]), Math.cos(this.rotations[0]), 0],
                 [0, 0, 0, 1]
             ];
-
-            // Z rotation
-            const rotateZ = [
-                [Math.cos(this.angle), -Math.sin(this.angle), 0, 0],
-                [Math.sin(this.angle), Math.cos(this.angle), 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1],
-            ];
+            rotated = matrix.matmul(rotateX, rotated);
 
             // Y rotation
             const rotateY = [
-                [Math.cos(this.angle), 0, -Math.sin(this.angle), 0],
+                [Math.cos(this.rotations[1]), 0, -Math.sin(this.rotations[1]), 0],
                 [0, 1, 0, 0],
-                [Math.sin(this.angle), 0, Math.cos(this.angle), 0],
+                [Math.sin(this.rotations[1]), 0, Math.cos(this.rotations[1]), 0],
                 [0, 0, 0, 1],
             ];
-    
-            // W rotation
+            rotated = matrix.matmul(rotateY, rotated);
+
+            // Z rotation
+            const rotateZ = [
+                [Math.cos(this.rotations[2]), -Math.sin(this.rotations[2]), 0, 0],
+                [Math.sin(this.rotations[2]), Math.cos(this.rotations[2]), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ];
+            rotated = matrix.matmul(rotateZ, rotated);
+
             const rotateW = [
                 [1, 0, 0, 0],
                 [0, 1, 0, 0],
-                [0, 0, Math.cos(this.angle), -Math.sin(this.angle)],
-                [0, 0, Math.sin(this.angle), Math.cos(this.angle)]
+                [0, 0, Math.cos(this.rotations[3]), -Math.sin(this.rotations[3])],
+                [0, 0, Math.sin(this.rotations[3]), Math.cos(this.rotations[3])]
             ];
-    
-            let rotated = v;
 
-            if (xRotation) {
-                rotated = matrix.matmul(rotateX, rotated);
-            }
-            if (yRotation) {
-                rotated = matrix.matmul(rotateY, rotated);
-            }
-            if (zRotation) {
-                rotated = matrix.matmul(rotateZ, rotated);
-            }
-            if (wRotation) {
-                rotated = matrix.matmul(rotateW, rotated);
-            }
+            rotated = matrix.matmul(rotateW, rotated);
     
         
             let distance = 2;
@@ -180,9 +257,9 @@ class Tesseract {
         }
     }
 
-    tick() {
+    tick(rotateX = 0, rotateY = 0, rotateZ = 0, rotateW = 0) {
         this.angle += 0.01;
-        this.calculatePoints(false, false, false, false);
+        this.calculatePoints();
         this.update();
     }
 
