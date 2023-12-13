@@ -1,15 +1,9 @@
-import { 
-    BoxGeometry,
-    MeshStandardMaterial,
-    Mesh,
-    HemisphereLight,
-    DirectionalLight
-} from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.min.js";
+import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.min.js";
 
 function createFloor() {
-    const floorGeometry = new BoxGeometry(10, 0.5, 10);
-    const floorMaterial = new MeshStandardMaterial({ color: 'White' });
-    const floor = new Mesh(floorGeometry, floorMaterial);
+    const floorGeometry = new THREE.BoxGeometry(10, 0.5, 10);
+    const floorMaterial = new THREE.MeshStandardMaterial({ color: 'White' });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
     floor.receiveShadow = true
     floor.position.y = -3;
@@ -19,7 +13,7 @@ function createFloor() {
 
 function createLights() {
 
-    const ambientLight = new HemisphereLight(
+    const ambientLight = new THREE.HemisphereLight(
         'white', // bright sky color
         'darkslategrey', // dim ground color
         2, // intensity
@@ -27,7 +21,7 @@ function createLights() {
 
     // const ambientLight = new AmbientLight('white', 2);
     // Create a directional light
-    const mainLight = new DirectionalLight('white', 8);
+    const mainLight = new THREE.DirectionalLight('white', 8);
 
     mainLight.castShadow = true
 

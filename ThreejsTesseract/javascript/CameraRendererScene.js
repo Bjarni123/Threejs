@@ -1,11 +1,7 @@
-import {
-    WebGLRenderer,
-    Scene,
-    PerspectiveCamera
-} from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.min.js";
+import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.min.js";
 
 function createRenderer() {
-    const renderer = new WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     renderer.physicallyCorrectLights = true;
 
@@ -15,7 +11,7 @@ function createRenderer() {
 }
 
 function createScene() {
-    const scene = new Scene();
+    const scene = new THREE.Scene();
 
     // scene.background = new Color('red');
 
@@ -23,7 +19,7 @@ function createScene() {
 }
 
 function createCamera() {
-    const camera = new PerspectiveCamera(
+    const camera = new THREE.PerspectiveCamera(
             35, // fov = Field Of View
             1, // aspect ratio (dummy value)
             0.1, // near clipping plane
