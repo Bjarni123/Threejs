@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js";
 
 import * as matrix from "./matrix";
 
@@ -67,13 +67,30 @@ class CreateHyperSphere {
     constructor() {
         this.group = new THREE.Group();
         this.position = new THREE.Vector3(0, 0, 0);
-        this.width = 2;
+        this.rotations = [0, 0, 0, 0];
+        // this.width = 2;
         this.angle = 0;
         this.radius = 1;
         this.points = [];
         this.projected3d = [];
         this.calculatePoints();
         this.drawCircle();
+    }
+
+    setXRotation(xRot) {
+        this.rotations[0] += 0.01 * xRot;
+    }
+
+    setYRotation(yRot) {
+        this.rotations[1] += 0.01 * yRot;
+    }
+    
+    setZRotation(zRot) {
+        this.rotations[2] += 0.01 * zRot;
+    }
+
+    setWRotation(wRot) {
+        this.rotations[3] += 0.01 * wRot;
     }
 
     calculatePoints(rotateX, rotateY, rotateZ, rotateW) {
@@ -119,59 +136,50 @@ class CreateHyperSphere {
             }
         }
 
-        this.calculate3DProjection(rotateX, rotateY, rotateZ, rotateW);
+        this.calculate3DProjection();
     }
 
-    calculate3DProjection( xRotation = false, yRotation = false, zRotation = false, wRotation = false ) {
+    calculate3DProjection() {
         for (let i = 0; i < this.points.length; i++) {
             const v = this.points[i];
+
+            let rotated = v;
             
             // X rotation
             const rotateX = [    
                 [1, 0, 0, 0],
-                [0, Math.cos(this.angle), -Math.sin(this.angle), 0],
-                [0, Math.sin(this.angle), Math.cos(this.angle), 0],
+                [0, Math.cos(this.rotations[0]), -Math.sin(this.rotations[0]), 0],
+                [0, Math.sin(this.rotations[0]), Math.cos(this.rotations[0]), 0],
                 [0, 0, 0, 1]
             ];
-
-            // Z rotation
-            const rotateZ = [
-                [Math.cos(this.angle), -Math.sin(this.angle), 0, 0],
-                [Math.sin(this.angle), Math.cos(this.angle), 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1],
-            ];
+            rotated = matrix.matmul(rotateX, rotated);
 
             // Y rotation
             const rotateY = [
-                [Math.cos(this.angle), 0, -Math.sin(this.angle), 0],
+                [Math.cos(this.rotations[1]), 0, -Math.sin(this.rotations[1]), 0],
                 [0, 1, 0, 0],
-                [Math.sin(this.angle), 0, Math.cos(this.angle), 0],
+                [Math.sin(this.rotations[1]), 0, Math.cos(this.rotations[1]), 0],
                 [0, 0, 0, 1],
             ];
-    
-            // W rotation
+            rotated = matrix.matmul(rotateY, rotated);
+
+            // Z rotation
+            const rotateZ = [
+                [Math.cos(this.rotations[2]), -Math.sin(this.rotations[2]), 0, 0],
+                [Math.sin(this.rotations[2]), Math.cos(this.rotations[2]), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ];
+            rotated = matrix.matmul(rotateZ, rotated);
+
             const rotateW = [
                 [1, 0, 0, 0],
                 [0, 1, 0, 0],
-                [0, 0, Math.cos(this.angle), -Math.sin(this.angle)],
-                [0, 0, Math.sin(this.angle), Math.cos(this.angle)]
+                [0, 0, Math.cos(this.rotations[3]), -Math.sin(this.rotations[3])],
+                [0, 0, Math.sin(this.rotations[3]), Math.cos(this.rotations[3])]
             ];
-    
-            let rotated = v;
 
-            if (xRotation) {
-                rotated = matrix.matmul(rotateX, rotated);
-            }
-            if (yRotation) {
-                rotated = matrix.matmul(rotateY, rotated);
-            }
-            if (zRotation) {
-                rotated = matrix.matmul(rotateZ, rotated);
-            }
-            if (wRotation) {
-                rotated = matrix.matmul(rotateW, rotated);
-            }
+            rotated = matrix.matmul(rotateW, rotated);
     
         
             let distance = 2;
@@ -185,11 +193,9 @@ class CreateHyperSphere {
             ];
         
             let projected = matrix.matmul(projection, rotated);
-            projected.mult(this.width);
+            projected.mult(this.radius * 2);
             this.projected3d[i] = new THREE.Vector3(projected.x + this.position.x, projected.y + this.position.y, projected.z + this.position.z);
         }
-
-        // this.projected3d = this.points;
     }
 
     update () {
@@ -236,8 +242,8 @@ class CreateHyperSphere {
     }
 
     tick() {
-        this.angle += 0.02;
-        this.calculate3DProjection(false, false, false, false);
+        this.angle += 0.01;
+        this.calculate3DProjection();
         this.update();
     }
 

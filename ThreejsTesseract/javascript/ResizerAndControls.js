@@ -1,5 +1,7 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+// import { OrbitControls } from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/examples/three.module.js/controls/OrbitControls';
+
 function onResize() {
         console.log('You resized the browser window!');
 }

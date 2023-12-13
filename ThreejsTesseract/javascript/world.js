@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+// import * as THREE from 'three';
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js';
 
 import { createRenderer, createCamera, createScene } from "/javascript/CameraRendererScene.js";
 import { onResize, Resizer, createControls } from "/javascript/ResizerAndControls.js";
@@ -64,49 +65,80 @@ class World {
         const VectorTesseract = new Tesseract();
         VectorTesseract.position = (new THREE.Vector3(-2, 0, 0));
 
+        // const VectorSphere = new CreateVectorSphere();
+
+        const VectorHyperSphere = new CreateHyperSphere();
+        VectorHyperSphere.position = (new THREE.Vector3(2, 0, 0));
 
         document.addEventListener('keydown', function(event) {
-            if(event.keyCode == 65) {
+            if(event.keyCode == 37) {
+                VectorHyperSphere.setYRotation(1);
+                // console.log('Left was pressed');
+            }   
+            else if(event.keyCode == '39') {
+                VectorHyperSphere.setYRotation(-1);
+                // console.log('Right was pressed');
+            }
+            else if(event.keyCode == 38) {
+                VectorHyperSphere.setXRotation(-1);
+                // console.log('Up was pressed');
+            }
+            else if(event.keyCode == 40) {
+                VectorHyperSphere.setXRotation(1);
+                // console.log('Down was pressed');
+            }
+            else if (event.keyCode == 17) {
+                VectorHyperSphere.setZRotation(1);
+                // console.log('ctrl was pressed');
+            }
+            else if (event.keyCode == 13) {
+                VectorHyperSphere.setZRotation(-1);
+                // console.log('E was pressed');
+            }
+            else if (event.keyCode == 107) {
+                VectorHyperSphere.setWRotation(1);
+                // console.log('+ was pressed');
+            }
+            else if (event.keyCode == 109) {
+                VectorHyperSphere.setWRotation(-1);
+                // console.log('- was pressed');
+            }
+            else if(event.keyCode == 65) {
                 VectorTesseract.setYRotation(1);
-                console.log('A was pressed');
+                // console.log('A was pressed');
             }
             else if(event.keyCode == '68') {
                 VectorTesseract.setYRotation(-1);
-                console.log('D was pressed');
+                // console.log('D was pressed');
             }
             else if(event.keyCode == 87) {
                 VectorTesseract.setXRotation(-1);
-                console.log('W was pressed');
+                // console.log('W was pressed');
             }
             else if(event.keyCode == '83') {
                 VectorTesseract.setXRotation(1);
-                console.log('S was pressed');
+                // console.log('S was pressed');
             }
             else if (event.keyCode == 81) {
                 VectorTesseract.setZRotation(1);
-                console.log('Q was pressed');
+                // console.log('Q was pressed');
             }
             else if (event.keyCode == 69) {
                 VectorTesseract.setZRotation(-1);
-                console.log('E was pressed');
+                // console.log('E was pressed');
             }
             else if (event.keyCode == 32) {
                 VectorTesseract.setWRotation(1);
-                console.log('Space was pressed');
+                // console.log('Space was pressed');
             }
             else if (event.keyCode == 16) {
                 VectorTesseract.setWRotation(-1);
-                console.log('Shift was pressed');
+                // console.log('Shift was pressed');
             }
             else {
                 console.log(event.keyCode);
             }
         });
-
-        // const VectorSphere = new CreateVectorSphere();
-
-        const VectorHyperSphere = new CreateHyperSphere();
-        VectorHyperSphere.position = (new THREE.Vector3(2, 0, 0));
         
         // const floor = createFloor();
         const { ambientLight, mainLight } = createLights();

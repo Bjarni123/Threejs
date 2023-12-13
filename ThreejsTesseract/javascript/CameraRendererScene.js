@@ -2,7 +2,7 @@ import {
     WebGLRenderer,
     Scene,
     PerspectiveCamera
-} from "three";
+} from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js";
 
 function createRenderer() {
     const renderer = new WebGLRenderer({ antialias: true });

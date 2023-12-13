@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js";
 
 import * as matrix from "./matrix";
 
@@ -64,7 +64,6 @@ class Tesseract {
             const v = points[i];
     
             let rotated = v;
-            let tempAngle = this.angle;
 
             /* if (this.rotations[0]) {
                 if (this.rotations[0] > 0) {
@@ -257,7 +256,7 @@ class Tesseract {
         }
     }
 
-    tick(rotateX = 0, rotateY = 0, rotateZ = 0, rotateW = 0) {
+    tick() {
         this.angle += 0.01;
         this.calculatePoints();
         this.update();
