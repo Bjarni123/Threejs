@@ -4,7 +4,7 @@ import {
     LineBasicMaterial,
     BufferGeometry,
     Line
-} from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js";
+} from "three";
 
 function CreateVectorBox() {
     const group = new Group();

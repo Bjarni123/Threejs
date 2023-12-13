@@ -9,7 +9,7 @@
 // Matrix Multiplication
 // https://youtu.be/tzsgS19RRc8
 
-import { Vector3 } from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js";
+import { Vector3 } from "three";
 
 function vecToMatrix(v) {
         let m = [];

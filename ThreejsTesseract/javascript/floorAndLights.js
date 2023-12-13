@@ -4,7 +4,7 @@ import {
     Mesh,
     HemisphereLight,
     DirectionalLight
-} from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.js";
+} from "three";
 
 function createFloor() {
     const floorGeometry = new BoxGeometry(10, 0.5, 10);
