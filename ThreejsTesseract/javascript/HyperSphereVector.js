@@ -20,7 +20,7 @@ function generatePointsOnHypersphere(dimensions, numPoints, radius = 2) {
   
     return sphericalCodePoints;
   }
-  
+
 function generateRandomPoint(dimensions) {
     const point = new P4Vector();
     let length = 0;
