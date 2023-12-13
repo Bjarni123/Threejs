@@ -1,5 +1,4 @@
-// import * as THREE from 'three';
-import * as THREE from 'three';
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.module.min.js';
 
 import { createRenderer, createCamera, createScene } from "/javascript/CameraRendererScene.js";
 import { onResize, Resizer, createControls } from "/javascript/ResizerAndControls.js";
