@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import * as matrix from "./matrix";
+import * as matrix from "./matrix.js";
 
 let points = [
     new P4Vector(-1, -1, -1, 1),
